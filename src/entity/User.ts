@@ -4,32 +4,30 @@ import { Timestamps } from "./Timestamps";
 
 @ObjectType()
 @Entity()
-export class User extends Timestamps{
-    
-    @Field(() => ID)
-    @PrimaryGeneratedColumn()
-    id: number;
+export class User extends Timestamps {
+  @Field(() => ID)
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Field()
-    @Column()
-    firstName: string;
+  @Field()
+  @Column()
+  firstName: string;
 
-    @Field()
-    @Column()
-    lastName: string;
+  @Field()
+  @Column()
+  lastName: string;
 
-    @Field()
-    @Column()
-    active: string; 
+  @Field()
+  @Column("boolean", { default: true })
+  isActive: boolean;
 
-    @Field()
-    @Column()
-    email: string;
+  @Field()
+  @Column()
+  email: string;
 
-    @Column()
-    password: string;
+  @Column()
+  password: string;
 
-    @Column('boolean', {default: false})
-    confirmed: boolean;
-
+  @Column("boolean", { default: false })
+  confirmed: boolean;
 }

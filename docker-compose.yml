@@ -1,7 +1,7 @@
 version: "3"
 services:
-  adso_server:
-    container_name: adso_server
+  server:
+    container_name: server
     restart: always
     build: .
     ports:
@@ -10,16 +10,16 @@ services:
       - .:/app
     links:
       - postgres
-#   web:
-#     container_name: web_sela
-#     restart: always
-#     build: ./web
-#     ports:
-#       - "3000:3000"
-#     volumes:
-#       - ./web:/app
+  #   web:
+  #     container_name: web_sela
+  #     restart: always
+  #     build: ./web
+  #     ports:
+  #       - "3000:3000"
+  #     volumes:
+  #       - ./web:/app
   postgres:
-    container_name: postgres_sela
+    container_name: postgres
     image: postgres:11.5-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: pgadmin_sela
+    container_name: pgadmin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.org}

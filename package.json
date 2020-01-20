@@ -7,8 +7,8 @@
     "start": "TS_NODE_PROJECT='./tsconfig.json' ts-node-dev  --inspect --respawn ./src src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
     "test": "npm run db:setup && jest --forceExit --detectOpenHandles",
-    "dtest": "docker exec -it app yarn test",
-    "gin": "docker exec -it app bash"
+    "dtest": "docker exec -it server yarn test",
+    "gin": "docker exec -it server bash"
   },
   "keywords": [],
   "author": "Rem Kim",
