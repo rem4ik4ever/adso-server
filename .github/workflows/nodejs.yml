@@ -19,6 +19,7 @@ jobs:
       - name: yarn install and test
         run: |
           yarn install --frozen-lockfile
+          yarn lint
           yarn test
         env:
           CI: true
