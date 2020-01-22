@@ -1,16 +1,10 @@
 import { testConn } from "../../../../test-utils/testConn";
-import { Connection } from "typeorm";
 import faker from "faker";
 import { User } from "../../../../entity/User";
 import { gCall } from "../../../../test-utils/gCall";
 
-let conn: Connection;
 beforeAll(async () => {
-  conn = await testConn();
-});
-
-afterAll(async () => {
-  await conn.close();
+  await testConn();
 });
 
 const RegisterMutation = `
