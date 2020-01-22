@@ -2,9 +2,9 @@ import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-// import session from "express-session";
-// import connectRedis from "connect-redis";
-// import { redis } from "./config/redis-connect";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import { redis } from "./config/redis-connect";
 import cors from "cors";
 import { createSchema } from "./utils/createSchema";
 import { getPlugins } from "./config/apollo-plugins";
@@ -27,7 +27,7 @@ const startServer = async () => {
     context: ({ req, res }: any) => ({ req, res })
   });
 
-  // const RedisStore = connectRedis(session);
+  const RedisStore = connectRedis(session);
 
   app.use(
     cors({
@@ -36,22 +36,22 @@ const startServer = async () => {
     })
   );
 
-  // app.use(
-  //   session({
-  //     store: new RedisStore({
-  //       client: redis as any
-  //     }),
-  //     name: "qid",
-  //     secret: "some-secret-from-env",
-  //     resave: false,
-  //     saveUninitialized: false,
-  //     cookie: {
-  //       httpOnly: true,
-  //       secure: process.env.NODE_ENV === "production",
-  //       maxAge: 1000 * 60 * 60 * 24 * 7 * 365
-  //     }
-  //   })
-  // );
+  app.use(
+    session({
+      store: new RedisStore({
+        client: redis as any
+      }),
+      name: "qid",
+      secret: "some-secret-from-env",
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        maxAge: 1000 * 60 * 60 * 24 * 7 * 365
+      }
+    })
+  );
 
   server.applyMiddleware({ app });
 

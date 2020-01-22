@@ -22,7 +22,7 @@ export class User extends Timestamps {
   isActive: boolean;
 
   @Field()
-  @Column()
+  @Column("text", { unique: true })
   email: string;
 
   @Column()

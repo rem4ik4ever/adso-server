@@ -1,7 +1,7 @@
 import { testConn } from "../../../../test-utils/testConn";
 import faker from "faker";
-import { User } from "../../../../entity/User";
 import { gCall } from "../../../../test-utils/gCall";
+import { User } from "../../../../entity/User";
 
 beforeAll(async () => {
   await testConn();
@@ -9,7 +9,11 @@ beforeAll(async () => {
 
 const RegisterMutation = `
   mutation Register($input: RegisterInput!){
-    register(input: $input)
+    register(input: $input){
+      firstName
+      lastName
+      email
+    }
   }
 `;
 
@@ -19,15 +23,23 @@ describe("Register", () => {
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
       email: faker.internet.email(),
-      password: faker.internet.password()
+      password: "qwerty"
     };
-    await gCall({
+    const response = await gCall({
       source: RegisterMutation,
       variableValues: {
         input: user
       }
     });
-
+    expect(response).toMatchObject({
+      data: {
+        register: {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email
+        }
+      }
+    });
     const dbUser = await User.findOne({ where: { email: user.email } });
     expect(dbUser).toBeDefined();
     expect(dbUser!.confirmed).toBeFalsy();

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "TS_NODE_PROJECT='./tsconfig.json' ts-node-dev  --inspect --respawn ./src src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
-    "test": "npm run db:setup && jest --forceExit --detectOpenHandles",
+    "test": "rimraf src/data && jest && rimraf src/data",
     "dtest": "docker exec -it server yarn test",
     "gin": "docker exec -it server bash"
   },
@@ -52,16 +52,18 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
-    "sqlite3": "^4.1.1",
     "graphql": "^14.5.8",
     "graphql-query-complexity": "^0.4.1",
     "ioredis": "^4.14.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",
+    "moment": "^2.24.0",
     "mongoose": "^5.7.5",
     "nodemailer": "^6.3.1",
     "pg": "^7.12.1",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^3.0.0",
+    "sqlite3": "^4.1.1",
     "type-graphql": "^0.17.5",
     "typeorm": "^0.2.20",
     "uuid": "^3.3.3"
