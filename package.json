@@ -8,7 +8,8 @@
     "db:setup": "ts-node ./src/test-utils/setup.ts",
     "test": "rimraf src/data && jest --detectOpenHandles --forceExit && rimraf src/data",
     "dtest": "docker exec -it server yarn test",
-    "gin": "docker exec -it server bash"
+    "gin": "docker exec -it server bash",
+    "lint": "tslint src/**/*.ts"
   },
   "keywords": [],
   "author": "Rem Kim",
@@ -41,6 +42,7 @@
     "ts-jest": "^24.1.0",
     "ts-node": "^8.4.1",
     "ts-node-dev": "^1.0.0-pre.43",
+    "tslint": "^6.0.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {
