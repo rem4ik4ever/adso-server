@@ -10,6 +10,11 @@
     "dtest": "docker exec -it server yarn test",
     "gin": "docker exec -it server bash"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn test"
+    }
+  },
   "keywords": [],
   "author": "Rem Kim",
   "license": "ISC",
