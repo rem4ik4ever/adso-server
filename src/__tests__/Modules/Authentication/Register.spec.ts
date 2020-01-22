@@ -2,6 +2,7 @@ import faker from "faker";
 import { testConn } from "../../../test-utils/testConn";
 import { gCall } from "../../../test-utils/gCall";
 import { User } from "../../../entity/User";
+import { registerUser } from "../../../services/authentication.service";
 
 beforeAll(async () => {
   await testConn();
@@ -44,5 +45,26 @@ describe("Register", () => {
     expect(dbUser).toBeDefined();
     expect(dbUser!.confirmed).toBeFalsy();
     expect(dbUser!.firstName).toEqual(user.firstName);
+  });
+
+  it("should not register user with existing email", async () => {
+    const user = {
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: "qwerty"
+    };
+    await registerUser({
+      ...user,
+      isActive: true,
+      confirmed: true
+    });
+    const response = await gCall({
+      source: RegisterMutation,
+      variableValues: {
+        input: user
+      }
+    });
+    expect(response.data).toBeNull();
   });
 });

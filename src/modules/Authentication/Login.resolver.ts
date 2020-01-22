@@ -1,7 +1,6 @@
 import { Mutation, Resolver, Arg } from "type-graphql";
 import { loginUser } from "../../services/authentication.service";
 import { LoginInput } from "./inputs/Login.input";
-import { logger } from "../../utils/logger";
 import { createAccessToken, createRefreshToken } from "../utils/auth";
 import { LoginResponse } from "./types/LoginResponse.type";
 
@@ -13,12 +12,7 @@ export class LoginResolver {
     { email, password }: LoginInput
   ): Promise<LoginResponse | null> {
     let user = null;
-    try {
-      user = await loginUser(email, password);
-    } catch (error) {
-      logger(error);
-      return null;
-    }
+    user = await loginUser(email, password);
     if (!user) return null;
 
     return {

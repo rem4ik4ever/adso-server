@@ -43,13 +43,10 @@ export const loginUser = async (
     logger("user_not_found");
     return null;
   }
-  let valid = false;
-  try {
-    valid = await bcrypt.compare(password, user?.password);
-  } catch (error) {
-    throw new Error("wrong_password");
+  const valid = await bcrypt.compare(password, user?.password);
+  if (valid) {
+    return user;
   }
-  if (valid) return user;
 
   return null;
 };

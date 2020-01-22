@@ -10,20 +10,15 @@ export class RegisterResolver {
     @Arg("input")
     { email, firstName, lastName, password }: RegisterInput
   ): Promise<User | null> {
-    try {
-      const userData = {
-        email,
-        firstName,
-        lastName,
-        password,
-        confirmed: false,
-        isActive: true
-      };
-      const user = await registerUser(userData);
-      return user;
-    } catch (error) {
-      console.error(error);
-      return null;
-    }
+    const userData = {
+      email,
+      firstName,
+      lastName,
+      password,
+      confirmed: false,
+      isActive: true
+    };
+    const user = await registerUser(userData);
+    return user;
   }
 }

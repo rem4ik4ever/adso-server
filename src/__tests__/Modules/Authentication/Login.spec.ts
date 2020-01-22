@@ -41,4 +41,28 @@ describe("Login", () => {
     expect(response?.data?.login?.accessToken).toBeDefined();
     expect(response?.data?.login?.refreshToken).toBeDefined();
   });
+
+  it("should not login", async () => {
+    const user = {
+      firstName: faker.name.firstName(),
+      lastName: faker.name.lastName(),
+      email: faker.internet.email(),
+      password: "qwerty",
+      isActive: true,
+      confirmed: true
+    };
+    await registerUser(user);
+
+    const response = await gCall({
+      source: LoginMutation,
+      variableValues: {
+        input: {
+          email: user.email,
+          password: "somepass"
+        }
+      }
+    });
+
+    expect(response?.data).toBeNull();
+  });
 });
