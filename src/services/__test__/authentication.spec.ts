@@ -3,6 +3,7 @@ import faker from "faker";
 import { User } from "../../entity/User";
 import { testConn } from "../../test-utils/testConn";
 
+// Actions test
 beforeAll(async () => {
   await testConn();
 });
