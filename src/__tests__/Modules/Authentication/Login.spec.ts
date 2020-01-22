@@ -10,9 +10,8 @@ beforeAll(async () => {
 const LoginMutation = `
   mutation Login($input: LoginInput!){
     login(input: $input){
-      firstName
-      lastName
-      email
+      accessToken
+      refreshToken
     }
   }
 `;
@@ -28,6 +27,7 @@ describe("Login", () => {
       confirmed: true
     };
     await registerUser(user);
+
     const response = await gCall({
       source: LoginMutation,
       variableValues: {
@@ -37,14 +37,8 @@ describe("Login", () => {
         }
       }
     });
-    expect(response).toMatchObject({
-      data: {
-        login: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email
-        }
-      }
-    });
+
+    expect(response?.data?.login?.accessToken).toBeDefined();
+    expect(response?.data?.login?.refreshToken).toBeDefined();
   });
 });

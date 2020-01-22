@@ -40,10 +40,15 @@ export const loginUser = async (
     where: { email }
   });
   if (!user) {
-    logger("User not found");
+    logger("user_not_found");
     return null;
   }
-  const valid = await bcrypt.compare(password, user?.password);
+  let valid = false;
+  try {
+    valid = await bcrypt.compare(password, user?.password);
+  } catch (error) {
+    throw new Error("wrong_password");
+  }
   if (valid) return user;
 
   return null;
