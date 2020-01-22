@@ -1,7 +1,7 @@
-import { registerUser, loginUser } from "../authentication.service";
 import faker from "faker";
-import { User } from "../../entity/User";
 import { testConn } from "../../test-utils/testConn";
+import { registerUser, loginUser } from "../../services/authentication.service";
+import { User } from "../../entity/User";
 
 beforeAll(async () => {
   await testConn();

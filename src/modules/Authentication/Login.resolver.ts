@@ -1,8 +1,8 @@
 import { Mutation, Resolver, Arg } from "type-graphql";
-import { LoginInput } from "../inputs/Login.input";
-import { User } from "../../../entity/User";
-import { loginUser } from "../../../services/authentication.service";
-import { logger } from "../../../utils/logger";
+import { loginUser } from "../../services/authentication.service";
+import { LoginInput } from "./inputs/Login.input";
+import { User } from "../../entity/User";
+import { logger } from "../../utils/logger";
 
 @Resolver()
 export class LoginResolver {

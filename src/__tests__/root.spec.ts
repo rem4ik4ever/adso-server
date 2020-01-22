@@ -1,5 +1,5 @@
-import { gCall } from "../test-utils/gCall";
 import { testConn } from "../test-utils/testConn";
+import { gCall } from "../test-utils/gCall";
 
 beforeAll(async () => {
   await testConn();

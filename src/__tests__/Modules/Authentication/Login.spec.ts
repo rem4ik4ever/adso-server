@@ -1,7 +1,7 @@
-import { testConn } from "../../../../test-utils/testConn";
 import faker from "faker";
-import { gCall } from "../../../../test-utils/gCall";
-import { registerUser } from "../../../../services/authentication.service";
+import { testConn } from "../../../test-utils/testConn";
+import { registerUser } from "../../../services/authentication.service";
+import { gCall } from "../../../test-utils/gCall";
 
 beforeAll(async () => {
   await testConn();

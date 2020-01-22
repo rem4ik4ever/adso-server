@@ -1,7 +1,7 @@
-import { testConn } from "../../../../test-utils/testConn";
 import faker from "faker";
-import { gCall } from "../../../../test-utils/gCall";
-import { User } from "../../../../entity/User";
+import { testConn } from "../../../test-utils/testConn";
+import { gCall } from "../../../test-utils/gCall";
+import { User } from "../../../entity/User";
 
 beforeAll(async () => {
   await testConn();
