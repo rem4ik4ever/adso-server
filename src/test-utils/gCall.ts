@@ -5,12 +5,12 @@ import Maybe from "graphql/tsutils/Maybe";
 interface Options {
   source: string;
   variableValues?: Maybe<{ [key: string]: any }>;
-  userId?: number;
+  accessToken?: string;
 }
 
 let schema: GraphQLSchema;
 
-export const gCall = async ({ source, variableValues, userId }: Options) => {
+export const gCall = async ({ source, variableValues, accessToken }: Options) => {
   if (!schema) {
     schema = await createSchema();
   }
@@ -20,8 +20,8 @@ export const gCall = async ({ source, variableValues, userId }: Options) => {
     variableValues,
     contextValue: {
       req: {
-        session: {
-          userId
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
         }
       },
       res: {
