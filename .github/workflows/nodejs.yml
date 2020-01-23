@@ -13,8 +13,6 @@ jobs:
     services:
       redis:
         image: "bitnami/redis:latest"
-        environment:
-          - ALLOW_EMPTY_PASSWORD=yes
 
     steps:
       - uses: actions/checkout@v1
