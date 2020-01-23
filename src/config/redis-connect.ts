@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+/* tslint:disable:no-var-requires */
 const MemoryCache = require("@outofsync/memory-cache");
 
 const getRedisClient = () => {
