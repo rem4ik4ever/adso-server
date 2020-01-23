@@ -39,6 +39,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "faker": "^4.1.0",
     "husky": "^4.2.0",
+    "ioredis-mock": "^4.19.0",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.1",

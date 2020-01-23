@@ -2,6 +2,7 @@ import { User } from "../entity/User";
 import { sendConfirmationEmail } from "./emails.service";
 import bcrypt from "bcryptjs";
 import { logger } from "../utils/logger";
+import { findUserByConfirmationToken } from "./users.service";
 
 export interface RegisterInforation {
   firstName: string;
@@ -12,6 +13,11 @@ export interface RegisterInforation {
   confirmed: boolean;
 }
 
+/**
+ * Register new user
+ *
+ * @param data RegistrationInformation
+ */
 export const registerUser = async (
   data: RegisterInforation
 ): Promise<User | null> => {
@@ -49,4 +55,24 @@ export const loginUser = async (
   }
 
   return null;
+};
+
+/**
+ * Confirm user and remove token from redis
+ *
+ * @param token Confiramtion token
+ */
+export const confirmUser = async (token: string): Promise<boolean> => {
+  const userId = await findUserByConfirmationToken(token);
+  if (!userId) return false;
+
+  const user = await User.findOne(+userId);
+  if (!user) return false;
+
+  if (!user.confirmed) {
+    user.confirmed = true;
+    await user.save();
+  }
+
+  return true;
 };

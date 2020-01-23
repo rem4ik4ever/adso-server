@@ -1,4 +1,4 @@
-import { createConfirmationUrl } from "../modules/utils/createConfirmationUrl";
+import { createConfirmationToken } from "../modules/utils/createConfirmationUrl";
 import { sendEmail } from "../modules/utils/sendEmail";
 
 /**
@@ -7,9 +7,13 @@ import { sendEmail } from "../modules/utils/sendEmail";
  * @param email User email
  * @param userId User ID
  */
-export const sendConfirmationEmail = async (email: string, userId: number) => {
-  if (process.env.NODE_ENV === "test") return;
+export const sendConfirmationEmail = async (
+  email: string,
+  userId: number
+): Promise<string> => {
+  const token = await createConfirmationToken(userId);
+  if (process.env.NODE_ENV === "test") return token;
 
-  const url = await createConfirmationUrl(userId);
-  return sendEmail(email, url);
+  sendEmail(email, `http://localhost:3000/user/confirm/${token}`);
+  return token;
 };

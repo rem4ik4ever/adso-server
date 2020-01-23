@@ -1,7 +1,12 @@
 import faker from "faker";
 import { testConn } from "../../test-utils/testConn";
-import { registerUser, loginUser } from "../../services/authentication.service";
+import {
+  registerUser,
+  loginUser,
+  confirmUser
+} from "../../services/authentication.service";
 import { User } from "../../entity/User";
+import { createConfirmationToken } from "../../modules/utils/createConfirmationUrl";
 
 beforeAll(async () => {
   await testConn();
@@ -79,6 +84,28 @@ describe("authentication.service", () => {
     it("should throw user not found exception", async () => {
       const user = await loginUser("nonexisting@email.com", "anypass");
       expect(user).toBeNull();
+    });
+  });
+
+  describe("#confirmUser", () => {
+    it("should set confirmed field to true", async () => {
+      const userData = {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        password: "qwerty",
+        isActive: true,
+        confirmed: false
+      };
+      const user = await User.create(userData).save();
+      const confirmationToken = await createConfirmationToken(user.id);
+
+      await confirmUser(confirmationToken);
+      const confirmedUser = await User.findOne(user.id);
+
+      expect(user.confirmed).toBeFalsy();
+      expect(confirmedUser).toBeDefined();
+      expect(confirmedUser?.confirmed).toBeTruthy();
     });
   });
 });
