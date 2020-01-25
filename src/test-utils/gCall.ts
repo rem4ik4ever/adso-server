@@ -6,13 +6,26 @@ interface Options {
   source: string;
   variableValues?: Maybe<{ [key: string]: any }>;
   accessToken?: string;
+  customHeaders?: Maybe<{ [key: string]: any }>;
 }
 
 let schema: GraphQLSchema;
 
-export const gCall = async ({ source, variableValues, accessToken }: Options) => {
+export const gCall = async ({
+  source,
+  variableValues,
+  accessToken,
+  customHeaders
+}: Options) => {
   if (!schema) {
     schema = await createSchema();
+  }
+  let headers: any = {};
+  if (accessToken) {
+    headers.authorization = `Bearer ${accessToken}`;
+  }
+  if (customHeaders) {
+    headers = customHeaders;
   }
   return graphql({
     schema,
@@ -20,9 +33,7 @@ export const gCall = async ({ source, variableValues, accessToken }: Options) =>
     variableValues,
     contextValue: {
       req: {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
+        headers
       },
       res: {
         clearCookie: jest.fn()
