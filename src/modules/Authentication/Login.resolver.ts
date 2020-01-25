@@ -16,8 +16,8 @@ export class LoginResolver {
     if (!user) return null;
 
     return {
-      accessToken: await createAccessToken(user),
-      refreshToken: await createRefreshToken(user)
+      accessToken: createAccessToken(user),
+      refreshToken: createRefreshToken(user)
     };
   }
 }

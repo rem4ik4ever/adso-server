@@ -23,10 +23,8 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
-    "rootDir": ".",
     "baseUrl": ".",
-    "plugins": [{ "transform": "@zerollup/ts-transform-paths" }],
-    "paths": { "*": ["*"] },
+    "rootDir": "src"
   },
   "exclude": ["node_modules"],
   "include": ["./src/**/*.tsx", "./src/**/*.ts"]

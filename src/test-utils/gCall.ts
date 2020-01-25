@@ -5,14 +5,27 @@ import Maybe from "graphql/tsutils/Maybe";
 interface Options {
   source: string;
   variableValues?: Maybe<{ [key: string]: any }>;
-  userId?: number;
+  accessToken?: string;
+  customHeaders?: Maybe<{ [key: string]: any }>;
 }
 
 let schema: GraphQLSchema;
 
-export const gCall = async ({ source, variableValues, userId }: Options) => {
+export const gCall = async ({
+  source,
+  variableValues,
+  accessToken,
+  customHeaders
+}: Options) => {
   if (!schema) {
     schema = await createSchema();
+  }
+  let headers: any = {};
+  if (accessToken) {
+    headers.authorization = `Bearer ${accessToken}`;
+  }
+  if (customHeaders) {
+    headers = customHeaders;
   }
   return graphql({
     schema,
@@ -20,9 +33,7 @@ export const gCall = async ({ source, variableValues, userId }: Options) => {
     variableValues,
     contextValue: {
       req: {
-        session: {
-          userId
-        }
+        headers
       },
       res: {
         clearCookie: jest.fn()

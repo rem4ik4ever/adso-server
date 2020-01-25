@@ -1,6 +1,12 @@
 import { sign, verify } from "jsonwebtoken";
 import { User } from "../../entity/User";
 
+interface JWTPayloadInterface {
+  id: number;
+  iat: number;
+  ext: number;
+}
+
 const access_secret =
   process.env.NODE_ENV !== "test" ? process.env.ACCESS_TOKEN_SECRET! : "secret";
 
@@ -27,11 +33,11 @@ export const createRefreshToken = (user: User): string => {
   });
 };
 
-export const verifyAccessToken = (token: string): Object | string =>
-  verify(token, process.env.ACCESS_TOKEN_SECRET!);
+export const verifyAccessToken = (token: string): JWTPayloadInterface =>
+  verify(token, access_secret) as JWTPayloadInterface;
 
-export const verifyRefreshToken = (token: string): Object | string =>
-  verify(token, refresh_secret);
+export const verifyRefreshToken = (token: string): JWTPayloadInterface =>
+  verify(token, refresh_secret) as JWTPayloadInterface;
 
 export const getHeaderJWT = (header: string): string | null => {
   try {
