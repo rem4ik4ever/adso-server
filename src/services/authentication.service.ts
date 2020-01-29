@@ -3,6 +3,7 @@ import { sendConfirmationEmail } from "./emails.service";
 import bcrypt from "bcryptjs";
 import { logger } from "../utils/logger";
 import { findUserByConfirmationToken } from "./users.service";
+import { verifyRefreshToken, createAccessToken } from "../modules/utils/auth";
 
 export interface RegisterInforation {
   firstName: string;
@@ -75,4 +76,48 @@ export const confirmUser = async (token: string): Promise<boolean> => {
   }
 
   return true;
+};
+
+/**
+ * Resend confirmation email if existing confirmation expired
+ *
+ * @param email string
+ * @param password string
+ * @param token string
+ */
+export const resendConfirmation = async (
+  email: string,
+  password: string,
+  token: string
+): Promise<boolean> => {
+  const userId = await findUserByConfirmationToken(token);
+  if (userId) return false;
+
+  const user = await loginUser(email, password);
+  if (!user) return false;
+  if (user.confirmed) return true;
+
+  await sendConfirmationEmail(user.email, user.id);
+
+  return true;
+};
+
+/**
+ * Validate Refresh token and return new AccessToken
+ *
+ * @param refreshToken string
+ */
+export const refresh = async (refreshToken: string): Promise<string | null> => {
+  let payload = null;
+  try {
+    payload = verifyRefreshToken(refreshToken);
+    if (!payload || !payload.id) return null;
+  } catch (error) {
+    logger(error);
+    return null;
+  }
+  const user = await User.findOne(payload.id);
+  if (!user) return null;
+
+  return createAccessToken(user);
 };

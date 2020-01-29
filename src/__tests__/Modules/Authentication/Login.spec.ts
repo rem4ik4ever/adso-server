@@ -2,6 +2,7 @@ import faker from "faker";
 import { testConn } from "../../../test-utils/testConn";
 import { registerUser } from "../../../services/authentication.service";
 import { gCall } from "../../../test-utils/gCall";
+import { randomUser } from "../../../helpers/UserHelpers";
 
 beforeAll(async () => {
   await testConn();
@@ -64,5 +65,21 @@ describe("Login", () => {
     });
 
     expect(response?.data).toBeNull();
+  });
+
+  it("should not login not confirmed user", async () => {
+    const user = await randomUser({ confirmed: false });
+    const response = await gCall({
+      source: LoginMutation,
+      variableValues: {
+        input: {
+          email: user.email,
+          password: "qwerty"
+        }
+      }
+    });
+    expect(response.errors).toBeDefined();
+    const error = response.errors![0];
+    expect(error.message).toEqual("user_not_confirmed");
   });
 });

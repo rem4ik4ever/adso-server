@@ -3,10 +3,17 @@ import { testConn } from "../../test-utils/testConn";
 import {
   registerUser,
   loginUser,
-  confirmUser
+  confirmUser,
+  resendConfirmation,
+  refresh
 } from "../../services/authentication.service";
 import { User } from "../../entity/User";
 import { createConfirmationToken } from "../../modules/utils/createConfirmationUrl";
+import { randomUser } from "../../helpers/UserHelpers";
+import {
+  createRefreshToken,
+  verifyAccessToken
+} from "../../modules/utils/auth";
 
 beforeAll(async () => {
   await testConn();
@@ -106,6 +113,80 @@ describe("authentication.service", () => {
       expect(user.confirmed).toBeFalsy();
       expect(confirmedUser).toBeDefined();
       expect(confirmedUser?.confirmed).toBeTruthy();
+    });
+  });
+
+  describe("#resendConfirmation", () => {
+    it("should resend confirmation email if confrimation token expired", async () => {
+      const user = await randomUser({ confirmed: false });
+
+      const result = await resendConfirmation(
+        user.email,
+        "qwerty",
+        "some-bad-token"
+      );
+
+      expect(result).toBeTruthy();
+    });
+
+    it("should not resend confirmation email if confrimation token is not expired", async () => {
+      const user = await randomUser({ confirmed: false });
+      const token = await createConfirmationToken(user.id);
+
+      const result = await resendConfirmation(user.email, "qwerty", token);
+
+      expect(result).toBeFalsy();
+    });
+
+    it("should not resend confirmation email if user credentials are invalid", async () => {
+      const user = await randomUser({ confirmed: false });
+
+      const result = await resendConfirmation(
+        user.email,
+        "qwertywrong",
+        "some-bad-token"
+      );
+
+      expect(result).toBeFalsy();
+    });
+
+    it("should not resend confirmation email if user is already confirmed", async () => {
+      const user = await randomUser({ confirmed: true });
+
+      const result = await resendConfirmation(
+        user.email,
+        "qwerty",
+        "some-bad-token"
+      );
+
+      expect(result).toBeTruthy();
+    });
+  });
+
+  describe("#refresh", () => {
+    it("should generate new accessToken using refreshToken", async () => {
+      const user = await randomUser();
+      const token = createRefreshToken(user);
+
+      const accessToken = await refresh(token);
+      const payload = verifyAccessToken(accessToken!);
+
+      expect(accessToken).toBeDefined();
+      expect(payload?.id).toEqual(user.id);
+    });
+
+    it("should not generate accessToken becuase refreshToken is invalid", async () => {
+      const accessToken = await refresh("some-bad-token");
+      expect(accessToken).toBeNull();
+    });
+
+    it("should not generate new accessToken because refreshToken user does not exist", async () => {
+      const user = await randomUser();
+      const refreshToken = createRefreshToken(user);
+
+      await User.delete(user.id);
+      const accessToken = await refresh(refreshToken);
+      expect(accessToken).toBeNull();
     });
   });
 });

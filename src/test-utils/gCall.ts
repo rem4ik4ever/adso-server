@@ -7,6 +7,7 @@ interface Options {
   variableValues?: Maybe<{ [key: string]: any }>;
   accessToken?: string;
   customHeaders?: Maybe<{ [key: string]: any }>;
+  cookies?: Maybe<{ [key: string]: any }>;
 }
 
 let schema: GraphQLSchema;
@@ -15,7 +16,8 @@ export const gCall = async ({
   source,
   variableValues,
   accessToken,
-  customHeaders
+  customHeaders,
+  cookies
 }: Options) => {
   if (!schema) {
     schema = await createSchema();
@@ -33,7 +35,8 @@ export const gCall = async ({
     variableValues,
     contextValue: {
       req: {
-        headers
+        headers,
+        cookies
       },
       res: {
         clearCookie: jest.fn()

@@ -7,7 +7,7 @@
     "start": "TS_NODE_PROJECT='./tsconfig.json' ts-node-dev  --inspect --respawn ./src src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
     "test:dev": "rimraf src/data && jest --detectOpenHandles --forceExit --coverage",
-    "test": "rimraf src/data && jest --detectOpenHandles --forceExit && rimraf src/data",
+    "test": "rimraf src/data && jest --detectOpenHandles --forceExit --verbose && rimraf src/data",
     "dtest": "docker exec -it server yarn test",
     "gin": "docker exec -it server bash",
     "lint": "tslint src/**/*.ts",
