@@ -6,7 +6,8 @@
   "scripts": {
     "start": "TS_NODE_PROJECT='./tsconfig.json' ts-node-dev  --inspect --respawn ./src src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
-    "test:dev": "rimraf src/data && jest --detectOpenHandles --forceExit --coverage",
+    "test:coverage": "rimraf src/data && jest --detectOpenHandles --forceExit --coverage",
+    "test:badges": "rimraf src/data && jest --detectOpenHandles --forceExit --coverage && jest-coverage-badges --output './badges'",
     "test": "rimraf src/data && jest --detectOpenHandles --forceExit --verbose && rimraf src/data",
     "dtest": "docker exec -it server yarn test",
     "gin": "docker exec -it server bash",
@@ -42,6 +43,7 @@
     "husky": "^4.2.0",
     "ioredis-mock": "^4.19.0",
     "jest": "^24.9.0",
+    "jest-coverage-badges": "^1.1.2",
     "nodemon": "^1.19.4",
     "prettier": "^1.19.1",
     "pretty-quick": "^2.0.1",
