@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { ObjectType, ID, Field } from "type-graphql";
 import { Timestamps } from "./Timestamps";
+import { Post } from "./Post";
 
 @ObjectType()
 @Entity()
@@ -30,4 +31,12 @@ export class User extends Timestamps {
 
   @Column("boolean", { default: false })
   confirmed: boolean;
+
+  @Field(() => [Post])
+  @OneToMany(
+    () => Post,
+    post => post.author,
+    { lazy: true }
+  )
+  posts: [Post];
 }

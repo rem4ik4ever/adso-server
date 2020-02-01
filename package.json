@@ -6,6 +6,7 @@
   "scripts": {
     "start": "TS_NODE_PROJECT='./tsconfig.json' ts-node-dev  --inspect --respawn ./src src/index.ts",
     "db:setup": "ts-node ./src/test-utils/setup.ts",
+    "test:dev": "rimraf src/data && jest --detectOpenHandles --forceExit",
     "test:coverage": "rimraf src/data && jest --detectOpenHandles --forceExit --coverage",
     "test:badges": "rimraf src/data && jest --detectOpenHandles --forceExit --coverage && jest-coverage-badges --output './badges'",
     "test": "rimraf src/data && jest --detectOpenHandles --forceExit --verbose && rimraf src/data",
