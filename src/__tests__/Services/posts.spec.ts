@@ -1,12 +1,22 @@
 import { randomPost, createManyPosts } from "../../helpers/PostHelpers";
-import { createPost, allPosts } from "../../services/posts.service";
+import {
+  createPost,
+  allPosts,
+  getPost,
+  updatePost,
+  deletePost
+} from "../../services/posts.service";
 import { randomUser } from "../../helpers/UserHelpers";
 import { User } from "../../entity/User";
-import { PostInterface } from "../../entity/Post";
+import { PostInterface, Post } from "../../entity/Post";
 import { testConn } from "../../test-utils/testConn";
 
 beforeAll(async () => {
   await testConn();
+});
+
+beforeEach(async () => {
+  await Post.clear();
 });
 
 describe("Posts Service", () => {
@@ -76,11 +86,57 @@ describe("Posts Service", () => {
 
   describe("#allPosts", () => {
     it("should return multiple posts", async () => {
-      const created = await createManyPosts(24);
-      console.log("created", created.length);
+      await createManyPosts(5);
       const posts = await allPosts({});
       expect(posts).toBeDefined();
-      // expect(posts.length).toEqual(24);
+      expect(posts.length).toEqual(5);
+    });
+  });
+
+  describe("#getPost", () => {
+    it("should return post by given uuid", async () => {
+      const created = await randomPost({ title: "This is my new post" });
+
+      const post = await getPost(created.uuid);
+
+      expect(post).toBeDefined();
+      expect(post?.uuid).toEqual(created.uuid);
+      expect(post?.title).toEqual(created.title);
+    });
+
+    it("should return null because no post is found", async () => {
+      const post = await getPost("not-existing-token");
+      expect(post).toBeNull();
+    });
+  });
+
+  describe("#updatePost", () => {
+    it("should update post and return updated result", async () => {
+      const post = await randomPost();
+      const updateData: PostInterface = {
+        title: "updated title",
+        description: "updated description",
+        tags: ["some", "cool", "tag"]
+      };
+
+      const updated = await updatePost(post.uuid, updateData);
+
+      expect(updated).toBeDefined();
+      expect(updated?.uuid).toEqual(post.uuid);
+      expect(updated?.title).toEqual(updateData.title);
+      expect(updated?.description).toEqual(updateData.description);
+      expect(updated?.tags).toEqual(updateData.tags);
+    });
+  });
+
+  describe("#deletePost", () => {
+    it("should destroy post by given uuid", async () => {
+      const post = await randomPost();
+
+      await deletePost(post.uuid);
+      const find = await getPost(post.uuid);
+
+      expect(find).toBeNull();
     });
   });
 });

@@ -1,14 +1,15 @@
 import { Post } from "../entity/Post";
 import faker from "faker";
 import { randomUser } from "./UserHelpers";
+import { InsertResult } from "typeorm";
 
-export const randomPost = async (props?: any): Promise<Post> => {
-  const data = {
+const randomPostData = async () => {
+  return {
     title: faker.name.title(),
     description: faker.lorem.paragraph(),
     author: await randomUser(),
-    tags: new Array(4).map(() => faker.random.word()),
-    images: new Array(4).map(() => faker.random.image()),
+    tags: makeTags(),
+    images: makeImages(),
     priceInfo: "fixed",
     price: faker.random.number() + faker.random.number(100) / 100,
     address: faker.address.streetAddress(),
@@ -16,14 +17,28 @@ export const randomPost = async (props?: any): Promise<Post> => {
     longitude: faker.address.longitude,
     active: true
   };
-  console.log("* Creating a post!");
+};
+
+export const randomPost = async (props?: any): Promise<Post> => {
   return await Post.create({
-    ...data,
+    ...(await randomPostData()),
     ...props
   }).save();
 };
 
-export const createManyPosts = (num: number): Promise<any[]> => {
-  const ls = new Array(num);
-  return Promise.all(ls.map(() => randomPost()));
+export const createManyPosts = async (num: number): Promise<InsertResult> => {
+  const queryBuilder = Post.createQueryBuilder();
+  let insertData = [];
+  for (let i = 0; i < num; i++) {
+    const data = await randomPostData();
+    insertData.push(data);
+  }
+  const result = await queryBuilder
+    .insert()
+    .values(insertData)
+    .execute();
+  return result;
 };
+/* istanbul ignore next */
+const makeTags = () => new Array(4).map(() => faker.random.word());
+const makeImages = () => new Array(4).map(() => faker.random.image());

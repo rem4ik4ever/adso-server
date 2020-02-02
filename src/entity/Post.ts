@@ -74,15 +74,15 @@ export class Post extends Timestamps {
 }
 
 export interface PostInterface {
-  title: string;
-  description: string;
+  title?: string;
+  description?: string;
   tags?: string[];
   images?: string[];
-  priceInfo: string;
+  priceInfo?: string;
   price?: number;
-  address: string;
-  latitude: number;
-  longitude: number;
+  address?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface PostFilters {

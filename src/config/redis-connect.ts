@@ -7,6 +7,7 @@ const getRedisClient = () => {
     const client = new MemoryCache({ bypassUnsupported: true });
     return client.createClient();
   }
+  /* istanbul ignore next */
   return new Redis({
     host: "redis"
   });

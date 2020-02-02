@@ -50,7 +50,7 @@ export const loginUser = async (
     logger("user_not_found");
     return null;
   }
-  const valid = await bcrypt.compare(password, user?.password);
+  const valid = await bcrypt.compare(password, user.password);
   if (valid) {
     return user;
   }
