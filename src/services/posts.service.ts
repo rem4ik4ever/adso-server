@@ -55,7 +55,7 @@ export const getPost = async (uuid: string): Promise<Post | null> => {
  * @param updateData PostInterface
  */
 export const updatePost = async (uuid: string, updateData: PostInterface) => {
-  let queryBuilder = Post.createQueryBuilder();
+  const queryBuilder = Post.createQueryBuilder();
 
   await queryBuilder
     .update(updateData as any)
@@ -70,7 +70,7 @@ export const updatePost = async (uuid: string, updateData: PostInterface) => {
  * @param uuid string
  */
 export const deletePost = async (uuid: string) => {
-  let queryBuilder = Post.createQueryBuilder();
+  const queryBuilder = Post.createQueryBuilder();
 
   const result = await queryBuilder
     .delete()

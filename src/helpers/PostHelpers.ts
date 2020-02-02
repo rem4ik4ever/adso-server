@@ -28,7 +28,7 @@ export const randomPost = async (props?: any): Promise<Post> => {
 
 export const createManyPosts = async (num: number): Promise<InsertResult> => {
   const queryBuilder = Post.createQueryBuilder();
-  let insertData = [];
+  const insertData = [];
   for (let i = 0; i < num; i++) {
     const data = await randomPostData();
     insertData.push(data);
