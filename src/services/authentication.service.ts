@@ -14,6 +14,11 @@ export interface RegisterInforation {
   confirmed: boolean;
 }
 
+export interface ResponsePayload {
+  data: any;
+  error: string | null;
+}
+
 /**
  * Register new user
  *
@@ -63,19 +68,22 @@ export const loginUser = async (
  *
  * @param token Confiramtion token
  */
-export const confirmUser = async (token: string): Promise<boolean> => {
+export const confirmUser = async (token: string): Promise<ResponsePayload> => {
   const userId = await findUserByConfirmationToken(token);
-  if (!userId) return false;
+  if (!userId) return { data: false, error: "ConfirmationTokenExpired" };
 
   const user = await User.findOne(+userId);
-  if (!user) return false;
+  if (!user) return { data: false, error: "UserNotFound" };
 
   if (!user.confirmed) {
     user.confirmed = true;
     await user.save();
   }
 
-  return true;
+  return {
+    data: true,
+    error: null
+  };
 };
 
 /**

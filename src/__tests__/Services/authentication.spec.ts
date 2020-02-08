@@ -114,6 +114,34 @@ describe("authentication.service", () => {
       expect(confirmedUser).toBeDefined();
       expect(confirmedUser?.confirmed).toBeTruthy();
     });
+
+    it("should not confirm user and return becuase token expired", async () => {
+      const { data, error } = await confirmUser("some-invalid-token");
+
+      expect(data).toBeFalsy();
+      expect(error).toBeDefined();
+      expect(error).toEqual("ConfirmationTokenExpired");
+    });
+
+    it("should set confirmed field to true", async () => {
+      const userData = {
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        password: "qwerty",
+        isActive: true,
+        confirmed: false
+      };
+      const user = await User.create(userData).save();
+      const confirmationToken = await createConfirmationToken(user.id);
+      await User.delete(user.id);
+
+      const { data, error } = await confirmUser(confirmationToken);
+
+      expect(data).toBeFalsy();
+      expect(error).toBeDefined();
+      expect(error).toEqual("UserNotFound");
+    });
   });
 
   describe("#resendConfirmation", () => {

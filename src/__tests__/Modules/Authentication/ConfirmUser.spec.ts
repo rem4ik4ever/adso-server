@@ -41,11 +41,7 @@ describe("ConfirmUser", () => {
         token: "some-bad-token"
       }
     });
-    expect(response).toMatchObject({
-      data: {
-        confirm: false
-      }
-    });
+    expect(response.errors).toBeDefined();
   });
 
   it("should return false because user is not found", async () => {
@@ -59,11 +55,6 @@ describe("ConfirmUser", () => {
         token: confirmationToken
       }
     });
-
-    expect(response).toMatchObject({
-      data: {
-        confirm: false
-      }
-    });
+    expect(response.errors).toBeDefined();
   });
 });
