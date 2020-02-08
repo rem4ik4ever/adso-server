@@ -15,7 +15,7 @@ export class LoginResolver {
     let user = null;
     user = await loginUser(email, password);
     if (!user) return null;
-    if (!user.confirmed) throw new AuthenticationError("user_not_confirmed");
+    if (!user.confirmed) throw new AuthenticationError("UserNotConfirmed");
 
     return {
       accessToken: createAccessToken(user),

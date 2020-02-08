@@ -14,6 +14,6 @@ export const sendConfirmationEmail = async (
   const token = await createConfirmationToken(userId);
   if (process.env.NODE_ENV === "test") return token;
 
-  sendEmail(email, `http://localhost:3000/user/confirm/${token}`);
+  sendEmail(email, `http://localhost:3000/confirm?token=${token}`);
   return token;
 };

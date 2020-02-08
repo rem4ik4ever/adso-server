@@ -80,6 +80,6 @@ describe("Login", () => {
     });
     expect(response.errors).toBeDefined();
     const error = response.errors![0];
-    expect(error.message).toEqual("user_not_confirmed");
+    expect(error.message).toEqual("UserNotConfirmed");
   });
 });
