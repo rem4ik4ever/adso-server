@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { Timestamps } from "./Timestamps";
 import { User } from "./User";
+import { Category } from "./Category";
 
 @ObjectType()
 @Entity()
@@ -65,12 +66,17 @@ export class Post extends Timestamps {
   @Column("float")
   longitude: string;
 
-  // @Field()
-  // category: string;
-
   @Field()
   @Column("boolean", { default: true })
   active: boolean;
+
+  @Field(() => Category)
+  @ManyToOne(
+    () => Category,
+    category => category.posts,
+    { lazy: true, nullable: true }
+  )
+  category: Category;
 }
 
 export interface PostInterface {

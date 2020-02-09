@@ -14,7 +14,8 @@
     "dtest": "docker exec -it server yarn test",
     "gin": "docker exec -it server bash",
     "lint": "tslint src/**/*.ts",
-    "pretty": "pretty-quick --staged"
+    "pretty": "pretty-quick --staged",
+    "db:seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   },
   "keywords": [],
   "author": "Rem Kim",
@@ -53,6 +54,7 @@
     "ts-node": "^8.4.1",
     "ts-node-dev": "^1.0.0-pre.43",
     "tslint": "^6.0.0",
+    "typeorm-seeding": "^1.2.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {
