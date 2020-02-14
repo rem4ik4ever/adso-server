@@ -59,11 +59,11 @@ export class Post extends Timestamps {
   address: string;
 
   @Field()
-  @Column("float")
+  @Column("text")
   latitude: string;
 
   @Field()
-  @Column("float")
+  @Column("text")
   longitude: string;
 
   @Field()
@@ -89,6 +89,7 @@ export interface PostInterface {
   address?: string;
   latitude?: number;
   longitude?: number;
+  categoryId?: number;
 }
 
 export interface PostFilters {

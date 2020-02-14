@@ -14,8 +14,13 @@ import cookieParser from "cookie-parser";
 const startServer = async () => {
   await createConnection();
   const app = express();
-
-  const schema = await createSchema();
+  let schema = null;
+  try {
+    schema = await createSchema();
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 
   const plugins = getPlugins(schema);
 
