@@ -1,5 +1,6 @@
 import { User } from "../entity/User";
 import { Post, PostInterface, PostFilters } from "../entity/Post";
+import { PostFilterInterface } from "./post.interfaces";
 
 /**
  * Create post
@@ -77,6 +78,27 @@ export const deletePost = async (uuid: string) => {
     .where("uuid = :uuid", { uuid })
     .execute();
   return result;
+};
+
+export const filterPosts = async ({
+  searchTerm,
+  location,
+  priceRange,
+  categoryId,
+  userId
+}: PostFilterInterface): Promise<Post[]> => {
+  console.log(searchTerm, location, priceRange, categoryId);
+  const queryBuilder = Post.createQueryBuilder();
+  const term = searchTerm?.toLocaleLowerCase();
+  queryBuilder.where(`authorId = :userId`, { userId });
+  queryBuilder.where(
+    `(lower(title) LIKE :searchTerm OR lower(description) LIKE :searchTerm)`,
+    { searchTerm: `%${term}%` }
+  );
+
+  const results = await queryBuilder.getMany();
+
+  return results;
 };
 
 /**

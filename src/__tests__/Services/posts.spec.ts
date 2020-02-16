@@ -4,7 +4,8 @@ import {
   allPosts,
   getPost,
   updatePost,
-  deletePost
+  deletePost,
+  filterPosts
 } from "../../services/posts.service";
 import { randomUser } from "../../helpers/UserHelpers";
 import { User } from "../../entity/User";
@@ -137,6 +138,61 @@ describe("Posts Service", () => {
       const find = await getPost(post.uuid);
 
       expect(find).toBeNull();
+    });
+  });
+
+  describe("#filterPosts", () => {
+    it("should filter posts by given searchTerm", async () => {
+      const author = await randomUser();
+      const post1 = await randomPost({
+        authorId: author.id,
+        title: "Banana bread"
+      });
+      const post2 = await randomPost({
+        authorId: author.id,
+        title: "Apple bread",
+        description: "Tasty like banana bread"
+      });
+      await randomPost({
+        authorId: author.id,
+        title: "bread",
+        description: "apple bread is tasty"
+      });
+
+      const posts = await filterPosts({
+        searchTerm: "banana"
+      });
+
+      expect(posts.length).toEqual(2);
+      expect(posts.map(({ id }) => id)).toContain(post1.id);
+      expect(posts.map(({ id }) => id)).toContain(post2.id);
+    });
+
+    it("should filter posts by given searchTerm and userId", async () => {
+      const author = await randomUser();
+      const author1 = await randomUser();
+      await randomPost({
+        authorId: author.id,
+        title: "Banana bread"
+      });
+      const post2 = await randomPost({
+        authorId: author1.id,
+        title: "Apple bread",
+        description: "Tasty like banana bread"
+      });
+      await randomPost({
+        authorId: author.id,
+        title: "bread",
+        description: "apple bread is tasty"
+      });
+
+      const posts = await filterPosts({
+        searchTerm: "banana",
+        userId: author1.id
+      });
+
+      expect(posts.length).toEqual(2);
+      expect(posts.map(({ id }) => id)).toContain(post2.id);
     });
   });
 });
