@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from "type-graphql";
+import { ObjectType, Field, ID, Root } from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -77,6 +77,11 @@ export class Post extends Timestamps {
     { lazy: true, nullable: true }
   )
   category: Category;
+
+  @Field()
+  createdDate(@Root() parent: Post): Date {
+    return parent.createdAt;
+  }
 }
 
 export interface PostInterface {

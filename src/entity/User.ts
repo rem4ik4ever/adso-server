@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
-import { ObjectType, ID, Field } from "type-graphql";
+import { ObjectType, ID, Field, Root } from "type-graphql";
 import { Timestamps } from "./Timestamps";
 import { Post } from "./Post";
 
@@ -17,6 +17,11 @@ export class User extends Timestamps {
   @Field()
   @Column()
   lastName: string;
+
+  @Field()
+  name(@Root() parent: User): string {
+    return `${parent.firstName} ${parent.lastName}`;
+  }
 
   @Field()
   @Column("boolean", { default: true })

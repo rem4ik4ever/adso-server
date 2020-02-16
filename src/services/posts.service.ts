@@ -86,5 +86,6 @@ export const postsService = {
   create: createPost,
   update: updatePost,
   get: allPosts,
+  getOne: getPost,
   delete: deletePost
 };

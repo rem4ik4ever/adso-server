@@ -12,7 +12,7 @@ beforeAll(async () => {
 });
 
 const RefreshQuery = `
-  query Refresh {
+  mutation Refresh {
     refresh
   }
 `;
