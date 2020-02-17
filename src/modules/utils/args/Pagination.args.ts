@@ -1,13 +1,16 @@
-import { ArgsType, Field } from "type-graphql";
+import { ArgsType, Field, Int } from "type-graphql";
 
 @ArgsType()
 export class PaginationArgs {
-  @Field()
+  @Field({ nullable: true })
   searchTerm?: string;
 
-  @Field()
+  @Field(() => Int, { defaultValue: 20 })
   perPage?: number;
 
-  @Field()
+  @Field({ nullable: true })
   after?: string;
+
+  @Field(() => Int, { nullable: true })
+  categoryId?: number;
 }

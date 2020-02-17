@@ -1,6 +1,6 @@
 import { User } from "../entity/User";
 import { Post, PostInterface, PostFilters } from "../entity/Post";
-import { PostFilterInterface } from "./post.interfaces";
+import { PostFilterInterface } from "../interfaces/post.interfaces";
 
 /**
  * Create post
@@ -109,5 +109,6 @@ export const postsService = {
   update: updatePost,
   get: allPosts,
   getOne: getPost,
-  delete: deletePost
+  delete: deletePost,
+  filter: filterPosts
 };
