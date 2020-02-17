@@ -79,6 +79,11 @@ export class Post extends Timestamps {
   category: Category;
 
   @Field()
+  categoryId(@Root() parent: Post): number {
+    return parent.category.id;
+  }
+
+  @Field()
   createdDate(@Root() parent: Post): Date {
     return parent.createdAt;
   }

@@ -1,6 +1,7 @@
 import { User } from "../entity/User";
 import { Post, PostInterface, PostFilters } from "../entity/Post";
 import { PostFilterInterface } from "../interfaces/post.interfaces";
+import { Category } from "../entity/Category";
 
 /**
  * Create post
@@ -12,8 +13,10 @@ export const createPost = async (
   data: PostInterface,
   user: User
 ): Promise<Post> => {
+  const category = await Category.findOne(data.categoryId);
   const postData = {
     ...data,
+    category,
     author: user
   } as any;
   const post = await Post.create(postData).save();
