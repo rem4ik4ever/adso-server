@@ -6,10 +6,13 @@ export class PaginationArgs {
   searchTerm?: string;
 
   @Field(() => Int, { defaultValue: 20 })
-  perPage?: number;
+  first?: number;
 
   @Field({ nullable: true })
   after?: string;
+
+  @Field({ nullable: true })
+  before?: string;
 
   @Field(() => Int, { nullable: true })
   categoryId?: number;

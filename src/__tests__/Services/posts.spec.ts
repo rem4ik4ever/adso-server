@@ -145,23 +145,24 @@ describe("Posts Service", () => {
     it("should filter posts by given searchTerm", async () => {
       const author = await randomUser();
       const post1 = await randomPost({
-        authorId: author.id,
+        author: author,
         title: "Banana bread"
       });
       const post2 = await randomPost({
-        authorId: author.id,
+        author: author,
         title: "Apple bread",
         description: "Tasty like banana bread"
       });
       await randomPost({
-        authorId: author.id,
+        author: author,
         title: "bread",
         description: "apple bread is tasty"
       });
 
       const posts = await filterPosts({
-        searchTerm: "banana"
-      });
+        searchTerm: "banana",
+        userId: author.id
+      }).getMany();
 
       expect(posts.length).toEqual(2);
       expect(posts.map(({ id }) => id)).toContain(post1.id);
@@ -172,16 +173,16 @@ describe("Posts Service", () => {
       const author = await randomUser();
       const author1 = await randomUser();
       await randomPost({
-        authorId: author.id,
+        author: author,
         title: "Banana bread"
       });
       const post2 = await randomPost({
-        authorId: author1.id,
+        author: author1,
         title: "Apple bread",
         description: "Tasty like banana bread"
       });
       await randomPost({
-        authorId: author.id,
+        author: author,
         title: "bread",
         description: "apple bread is tasty"
       });
@@ -189,9 +190,9 @@ describe("Posts Service", () => {
       const posts = await filterPosts({
         searchTerm: "banana",
         userId: author1.id
-      });
+      }).getMany();
 
-      expect(posts.length).toEqual(2);
+      expect(posts.length).toEqual(1);
       expect(posts.map(({ id }) => id)).toContain(post2.id);
     });
   });

@@ -103,6 +103,5 @@ export interface PostInterface {
 }
 
 export interface PostFilters {
-  perPage?: number;
-  page?: number;
+  first?: number;
 }

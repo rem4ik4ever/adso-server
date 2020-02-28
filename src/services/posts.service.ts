@@ -2,6 +2,7 @@ import { User } from "../entity/User";
 import { Post, PostInterface, PostFilters } from "../entity/Post";
 import { PostFilterInterface } from "../interfaces/post.interfaces";
 import { Category } from "../entity/Category";
+import { SelectQueryBuilder } from "typeorm";
 
 /**
  * Create post
@@ -29,12 +30,10 @@ export const createPost = async (
  * @param postFilters PostFilters
  */
 export const allPosts = async ({
-  perPage = 40,
-  page = 1
+  first = 40
 }: PostFilters): Promise<Post[]> => {
   const posts = await Post.createQueryBuilder()
-    .skip(perPage * (page - 1))
-    .take(perPage)
+    .take(first)
     .getMany();
 
   return posts;
@@ -83,25 +82,28 @@ export const deletePost = async (uuid: string) => {
   return result;
 };
 
-export const filterPosts = async ({
+export const filterPosts = ({
   searchTerm,
   location,
   priceRange,
   categoryId,
   userId
-}: PostFilterInterface): Promise<Post[]> => {
+}: PostFilterInterface): SelectQueryBuilder<Post> => {
   console.log(searchTerm, location, priceRange, categoryId);
-  const queryBuilder = Post.createQueryBuilder();
+
+  const queryBuilder = Post.createQueryBuilder("post");
   const term = searchTerm?.toLocaleLowerCase();
-  queryBuilder.where(`authorId = :userId`, { userId });
-  queryBuilder.where(
-    `(lower(title) LIKE :searchTerm OR lower(description) LIKE :searchTerm)`,
-    { searchTerm: `%${term}%` }
-  );
-
-  const results = await queryBuilder.getMany();
-
-  return results;
+  // queryBuilder.where("post.authorId = 1");
+  // queryBuilder.where("title = :title", { title: "qweqweqweq" });
+  queryBuilder.leftJoin("post.author", "user");
+  queryBuilder.where("user.id = :userId", { userId });
+  if (term) {
+    queryBuilder.andWhere(
+      `(lower(title) LIKE :searchTerm OR lower(description) LIKE :searchTerm)`,
+      { searchTerm: `%${term}%` }
+    );
+  }
+  return queryBuilder;
 };
 
 /**
