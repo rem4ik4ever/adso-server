@@ -3,6 +3,10 @@ import { Post, PostInterface, PostFilters } from "../entity/Post";
 import { PostFilterInterface } from "../interfaces/post.interfaces";
 import { Category } from "../entity/Category";
 import { SelectQueryBuilder } from "typeorm";
+import { PaginationArgs } from "../modules/utils/args/Pagination.args";
+import { fromBase64, toBase64 } from "../modules/utils/base64";
+import { PageInfo } from "../utils/PageInfo.class";
+import { PaginatedPostResponse } from "../modules/Post/utils/PaginatePostResponse.class";
 
 /**
  * Create post
@@ -93,8 +97,6 @@ export const filterPosts = ({
 
   const queryBuilder = Post.createQueryBuilder("post");
   const term = searchTerm?.toLocaleLowerCase();
-  // queryBuilder.where("post.authorId = 1");
-  // queryBuilder.where("title = :title", { title: "qweqweqweq" });
   queryBuilder.leftJoin("post.author", "user");
   queryBuilder.where("user.id = :userId", { userId });
   if (term) {
@@ -107,6 +109,39 @@ export const filterPosts = ({
 };
 
 /**
+ * Paginate posts
+ *
+ * @param param0 PaginationArgs
+ * @param queryBuilder SelectQueryBuilder<Post>
+ * @returns PaginatedPostResponse
+ */
+export const paginate = async (
+  { first = 20, after }: PaginationArgs,
+  queryBuilder: SelectQueryBuilder<Post>
+): Promise<PaginatedPostResponse> => {
+  const totalCount = await queryBuilder.getCount();
+  if (after) {
+    const afterId = fromBase64(after);
+    queryBuilder = queryBuilder.where("post.id > :after", { after: afterId });
+  }
+  queryBuilder = queryBuilder.limit(first + 1);
+  const posts = await queryBuilder.getMany();
+  const edges = posts.slice(0, first);
+  const beforeCursor = toBase64(edges[0]?.id);
+  const endCursor = toBase64(edges[edges.length - 1]?.id);
+  const pageInfo: PageInfo = {
+    beforeCursor,
+    endCursor,
+    hasNextPage: posts.length > first
+  };
+  return {
+    edges,
+    totalCount,
+    pageInfo
+  };
+};
+
+/**
  * Service object
  */
 export const postsService = {
@@ -115,5 +150,6 @@ export const postsService = {
   get: allPosts,
   getOne: getPost,
   delete: deletePost,
-  filter: filterPosts
+  filter: filterPosts,
+  paginate
 };

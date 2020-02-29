@@ -1,19 +1,8 @@
 import { ClassType, ObjectType, Field, Int } from "type-graphql";
+import { PageInfo } from "./PageInfo.class";
 
-export default function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
+export function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
   ObjectType({ isAbstract: true });
-
-  // class PageInfo {
-  //   @Field()
-  //   endCursor: string;
-
-  //   @Field()
-  //   beforeCursor: string;
-
-  //   @Field()
-  //   hasNextPage: boolean;
-  // }
-  @ObjectType()
   abstract class PaginatedResponseClass {
     @Field(() => [TItemClass])
     edges: TItem[];
@@ -21,8 +10,8 @@ export default function PaginatedResponse<TItem>(TItemClass: ClassType<TItem>) {
     @Field(() => Int)
     totalCount: number;
 
-    // @Field()
-    // pageInfo: PageInfo;
+    @Field(() => PageInfo)
+    pageInfo: PageInfo;
   }
 
   return PaginatedResponseClass;
