@@ -1,12 +1,11 @@
 import { User } from "../entity/User";
-import { Post, PostInterface, PostFilters } from "../entity/Post";
-import { PostFilterInterface } from "../interfaces/post.interfaces";
+import { Post, PostInterface } from "../entity/Post";
 import { Category } from "../entity/Category";
 import { SelectQueryBuilder } from "typeorm";
-import { PaginationArgs } from "../modules/utils/args/Pagination.args";
 import { fromBase64, toBase64 } from "../modules/utils/base64";
 import { PageInfo } from "../utils/PageInfo.class";
 import { PaginatedPostResponse } from "../modules/Post/utils/PaginatePostResponse.class";
+import { PostFilterInterface } from "../interfaces/post.interfaces";
 
 /**
  * Create post
@@ -35,7 +34,7 @@ export const createPost = async (
  */
 export const allPosts = async ({
   first = 40
-}: PostFilters): Promise<Post[]> => {
+}: PostFilterInterface): Promise<Post[]> => {
   const posts = await Post.createQueryBuilder()
     .take(first)
     .getMany();
@@ -86,15 +85,16 @@ export const deletePost = async (uuid: string) => {
   return result;
 };
 
-export const filterPosts = ({
-  searchTerm,
-  location,
-  priceRange,
-  categoryId,
-  userId
-}: PostFilterInterface): SelectQueryBuilder<Post> => {
-  console.log(searchTerm, location, priceRange, categoryId);
-
+export const filterPosts = (
+  { searchTerm }: PostFilterInterface,
+  // longitude,
+  // latitude,
+  // distance,
+  // from,
+  // to,
+  // categoryId
+  userId: number
+): SelectQueryBuilder<Post> => {
   const queryBuilder = Post.createQueryBuilder("post");
   const term = searchTerm?.toLocaleLowerCase();
   queryBuilder.leftJoin("post.author", "user");
@@ -116,7 +116,7 @@ export const filterPosts = ({
  * @returns PaginatedPostResponse
  */
 export const paginate = async (
-  { first = 20, after }: PaginationArgs,
+  { first = 20, after }: PostFilterInterface,
   queryBuilder: SelectQueryBuilder<Post>
 ): Promise<PaginatedPostResponse> => {
   const totalCount = await queryBuilder.getCount();

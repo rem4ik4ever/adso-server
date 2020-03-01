@@ -101,7 +101,3 @@ export interface PostInterface {
   longitude?: number;
   categoryId?: number;
 }
-
-export interface PostFilters {
-  first?: number;
-}

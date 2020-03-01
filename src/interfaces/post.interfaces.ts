@@ -1,18 +1,21 @@
+import { PostPaginationInterface } from "./pagination.interfaces";
+
 export interface LocationInterface {
-  latitude: number;
-  longitude: number;
-  distance: number;
+  latitude?: number;
+  longitude?: number;
+  distance?: number;
 }
 
 export interface PriceRangeInterface {
-  from: number;
-  to: number;
+  from?: number;
+  to?: number;
 }
 
-export interface PostFilterInterface {
+export interface PostFilterInterface
+  extends PostPaginationInterface,
+    LocationInterface,
+    PriceRangeInterface {
   searchTerm?: string;
-  location?: LocationInterface;
-  priceRange?: PriceRangeInterface;
   categoryId?: number;
   userId?: number;
 }

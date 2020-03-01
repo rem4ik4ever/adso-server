@@ -159,10 +159,12 @@ describe("Posts Service", () => {
         description: "apple bread is tasty"
       });
 
-      const posts = await filterPosts({
-        searchTerm: "banana",
-        userId: author.id
-      }).getMany();
+      const posts = await filterPosts(
+        {
+          searchTerm: "banana"
+        },
+        author.id
+      ).getMany();
 
       expect(posts.length).toEqual(2);
       expect(posts.map(({ id }) => id)).toContain(post1.id);
@@ -187,10 +189,12 @@ describe("Posts Service", () => {
         description: "apple bread is tasty"
       });
 
-      const posts = await filterPosts({
-        searchTerm: "banana",
-        userId: author1.id
-      }).getMany();
+      const posts = await filterPosts(
+        {
+          searchTerm: "banana"
+        },
+        author1.id
+      ).getMany();
 
       expect(posts.length).toEqual(1);
       expect(posts.map(({ id }) => id)).toContain(post2.id);
