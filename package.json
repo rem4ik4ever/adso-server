@@ -58,7 +58,7 @@
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "apollo-server-express": "^2.9.6",
+    "apollo-server-express": "^2.14.2",
     "aws-sdk": "^2.618.0",
     "bcryptjs": "^2.4.3",
     "connect-redis": "^4.0.3",
